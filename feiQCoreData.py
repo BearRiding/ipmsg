@@ -32,5 +32,5 @@ packet_id = 0
 file_info_queue = None
 # 保存文件
 file_list = list()
-# 保存下载文件按
+# 保存下载文件
 download_file_list = list()

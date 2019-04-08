@@ -50,42 +50,13 @@ def send_broadcast_offline_msg():
     print('off line')
 
 
-def send_msg_2_ip():
-    """向指定的ip发送飞秋消息"""
-    # 获取对方的ip
-
-    for i, user_info in enumerate(feiQCoreData.user_list):
-        print(i, user_info)
-
-    try:
-        num = int(input("请输入用户所对应的序号："))
-    except:
-        print("输入有误")
-
-    dest_ip = feiQCoreData.user_list[num]["ip"]
-
-    send_data = input('请输入你要发送的消息详情：')
-
-    if dest_ip and send_data:
+def send_msg_2_ip(dest_ip, send_data):
         chat_msg = build_msg(feiQCoreData.IPMSG_SENDMSG, send_data)
         send_msg(chat_msg, dest_ip)
+        print('发送成功')
 
 
-def send_file_2_ip():
-    """向指定的ip发送飞鸽文件"""
-    # 获取对方的ip
-    for i, user_info in enumerate(feiQCoreData.user_list):
-        print(i, user_info)
-        
-    try:
-        num = int(input("请输入用户所对应的序号："))
-    except:
-        print("输入有误")
-
-    dest_ip = feiQCoreData.user_list[num]["ip"]
-
-    send_data = input('请输入你要发送的文件名：')
-
+def send_file_2_ip(dest_ip, send_data):
     if dest_ip and send_data:
         file_msg = build_file_msg(send_data)
         send_msg(file_msg, dest_ip)

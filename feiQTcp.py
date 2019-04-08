@@ -82,7 +82,8 @@ def download_file(file_data):
     tcp_client_socket.send(download_file_msg.encode('gbk'))
     # 接收数据
     try:
-        f = open(file_data['file_name'], 'wb')
+        file_name = file_data['file_name'].split('/')
+        f = open(file_name[-1], 'wb')
         file_size = file_data['file_size']
         recv_size = 0
         while True:

@@ -97,13 +97,15 @@ def recv_msg():
 
                 feiQCoreData.download_file_list.append(download_file_info)
             else:
-                print("\n收到来着《《《%s》》》消息：%s" % (feiq_data['user_name'], feiq_data['option']))
+                global message
+                print("\n收到来着《%s》消息：%s" % (feiq_data['user_name'], feiq_data['option']))
+                message = 'from ' + feiq_data['user_name'] + '  ' + feiq_data['option']
 
             # 给对方发送消息确认(告知对方已经收到了)
             recv_ok_msg = feiQSendMsg.build_msg(feiQCoreData.IPMSG_RECVMSG)
             feiQSendMsg.send_msg(recv_ok_msg, dest_addr[0])
 
             
-
+message = 'null'
             
 
