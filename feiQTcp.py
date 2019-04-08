@@ -15,6 +15,8 @@ def deal_option_data(feiq_data):
     packet_id = option_list[0]
     file_id = option_list[1]
 
+    print("genggai")
+
     return int(packet_id, 16), int(file_id)
 
 
@@ -123,4 +125,4 @@ def tcp_main(file_info_queue):
 
 if __name__ == "__main__":
     tcp_main()
-    
+
