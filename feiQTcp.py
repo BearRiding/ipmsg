@@ -14,16 +14,12 @@ def deal_option_data(feiq_data):
     option_list = feiq_data['option'].split(":", 3)
     packet_id = option_list[0]
     file_id = option_list[1]
-
-    print("genggai")
-
     return int(packet_id, 16), int(file_id)
 
 
 def send_file(client_socket):
     """发送文件给客户端"""
     recv_data = client_socket.recv(1024)
-    #print(recv_data) >>>b'1_lbt80_0#128#F0DEF1E52ADF#0#0#0#4000#9:1502097760:Administrator:\xd5\xb2\xc0\xf6\xbe\xfd:96:5987d043:0:0:'
     feiq_data = deal_feiq_data(recv_data)
     # 处理'option': '5987d043:0:0:'
     packet_id, file_id = deal_option_data(feiq_data)
@@ -57,12 +53,10 @@ def get_file_info_from_queue(file_info_queue):
     """获取文件信息来着进程间的消息"""
     while True:
         file_info = file_info_queue.get()
-        print('刚刚收到的文件信息是：', file_info)
+        print('刚刚收到的文件是：', file_info['data']['file_name'])
         if file_info['type'] == 'send_file':
             # 若是发送文件
             feiQCoreData.file_list.append(file_info['data'])
-            for i, file_info_data in enumerate(feiQCoreData.file_list):
-                print(i, file_info_data)
         elif file_info['type'] == 'download_file':
             # 若是下载文件
             download_file(file_info['data'])
@@ -80,9 +74,9 @@ def download_file(file_data):
     download_file_msg = feiQSendMsg.build_msg(feiQCoreData.IPMSG_GETFILEDATA, download_file_option)
     # 发送数据给服务器
     tcp_client_socket.send(download_file_msg.encode('gbk'))
+    file_name = file_data['file_name'].split('/')
     # 接收数据
     try:
-        file_name = file_data['file_name'].split('/')
         f = open(file_name[-1], 'wb')
         file_size = file_data['file_size']
         recv_size = 0
@@ -98,7 +92,7 @@ def download_file(file_data):
     except Exception as ret:
         print('下载文件错：%s' % ret)
     else:
-        print("%s>>>>下载成功" % file_data['file_name'])
+        print("%s>>>>下载成功" % file_name[-1])
         f.close()
     tcp_client_socket.close()
 

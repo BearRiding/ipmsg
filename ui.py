@@ -41,7 +41,6 @@ class myui(QMainWindow, Ui_MainWindow):
         self.flushBegin()
         self.user_list = list()
         self.receives = list()
-        self.download_file_list = list()
 
     def flushBegin(self):
         self.tupdate = tUpdateUI()
@@ -73,12 +72,11 @@ class myui(QMainWindow, Ui_MainWindow):
             i = i + 1
 
     def btnDownload(self, item):
-        print(454)
         file_info = dict()
         file_info['type'] = "download_file"
         file_info['data'] = feiQCoreData.download_file_list[item.row()]
         feiQCoreData.file_info_queue.put(file_info)
-        print('down')
+        feiQCoreData.download_file_list.pop(item.row())
 
     def btUpClicked(self):
         feiQSendMsg.send_broadcast_online_msg()
@@ -93,7 +91,6 @@ class myui(QMainWindow, Ui_MainWindow):
     
     def btnFileClicked(self):
         filename = QFileDialog.getOpenFileName()
-        print(filename, type(filename), filename[0])
         feiQSendMsg.send_file_2_ip(self.ipCombo.currentData(), filename[0])
     
 

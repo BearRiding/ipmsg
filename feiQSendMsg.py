@@ -24,7 +24,6 @@ def build_file_msg(file_name):
         print('%s >>文件不存在，请重新输入' % file_name)
     else:
         # 文件序号：文件名：文件大小：文件修改时间：文件类型
-        # 0:test.doc:05600:5983d77e:1:
         option_str = "%d:%s:%x:%x:%x" % (0, file_name, file_size, int(file_ctime), feiQCoreData.IPMSG_FILE_REGULAR)
         command_num = feiQCoreData.IPMSG_SENDMSG | feiQCoreData.IPMSG_FILEATTACHOPT
         file_str = '\0' + option_str
