@@ -6,7 +6,7 @@ feiQ_port = 2425
 feiQ_version = 1
 feiQ_user_name = "BearKing_user"
 feiQ_host_name = 'BearKing_host'
-broadcast_ip = '10.15.166.255' # 广播ip
+broadcast_ip = '10.24.63.255' # 广播ip
 
 # 飞鸽command
 IPMSG_BR_ENTRY = 0x00000001  # 表示由用户上线
@@ -27,7 +27,7 @@ IPMSG_GETFILEDATA = 0x00000060
 user_list = list() # 保存在线用户列表
 # 保存文件包编号
 packet_id = 0
-
+file_id = 0
 # 一个队列来进程间通信
 file_info_queue = None
 # 保存文件

@@ -24,9 +24,10 @@ def build_file_msg(file_name):
         print('%s >>文件不存在，请重新输入' % file_name)
     else:
         # 文件序号：文件名：文件大小：文件修改时间：文件类型
-        option_str = "%d:%s:%x:%x:%x" % (0, file_name, file_size, int(file_ctime), feiQCoreData.IPMSG_FILE_REGULAR)
+        option_str = "%d:%s:%x:%x:%x" % (feiQCoreData.file_id, file_name, file_size, int(file_ctime), feiQCoreData.IPMSG_FILE_REGULAR)
         command_num = feiQCoreData.IPMSG_SENDMSG | feiQCoreData.IPMSG_FILEATTACHOPT
         file_str = '\0' + option_str
+        
         return build_msg(command_num, file_str)
 
 
@@ -64,10 +65,12 @@ def send_file_2_ip(dest_ip, send_data):
         send_file_info = dict()
         send_file_info['packet_id'] = feiQCoreData.packet_id
         send_file_info['file_name'] = send_data
-        send_file_info['file_id'] = 0
+
+        send_file_info['file_id'] = feiQCoreData.file_id
 
         send_info = dict()
         send_info["type"] = 'send_file'
         send_info['data'] = send_file_info
 
         feiQCoreData.file_info_queue.put(send_info)
+        feiQCoreData.file_id = feiQCoreData.file_id + 1

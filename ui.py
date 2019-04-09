@@ -91,7 +91,7 @@ class myui(QMainWindow, Ui_MainWindow):
     
     def btnFileClicked(self):
         filename = QFileDialog.getOpenFileName()
-        feiQSendMsg.send_file_2_ip(self.ipCombo.currentData(), filename[0])
+        feiQSendMsg.send_file_2_ip(self.ipCombo.currentData(), filename[0].split('/')[-1])
     
 
 

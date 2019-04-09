@@ -23,8 +23,10 @@ def send_file(client_socket):
     feiq_data = deal_feiq_data(recv_data)
     # 处理'option': '5987d043:0:0:'
     packet_id, file_id = deal_option_data(feiq_data)
-    print("对方发送文件的包编号：%d, 序号：%d" % (packet_id, file_id))
+    print("发送文件的包编号：%d, 序号：%d" % (packet_id, file_id))
     for file_info_data in feiQCoreData.file_list:
+        print('查找:', file_info_data['file_name'])
+        print(str(packet_id), str(file_id), str(file_info_data['packet_id']), str(file_info_data['file_id']))
         if packet_id == file_info_data['packet_id'] and file_id == file_info_data['file_id']:
             try:
                 f = open(file_info_data['file_name'], 'rb')
@@ -47,19 +49,22 @@ def send_file(client_socket):
     else:
         print('没有找到要发送的文件×××××')
     client_socket.close()
+    print('----------')
 
 
 def get_file_info_from_queue(file_info_queue):
     """获取文件信息来着进程间的消息"""
     while True:
         file_info = file_info_queue.get()
-        print('刚刚收到的文件是：', file_info['data']['file_name'])
+        print('文件队列添加：', file_info['data']['file_name'])
         if file_info['type'] == 'send_file':
             # 若是发送文件
             feiQCoreData.file_list.append(file_info['data'])
         elif file_info['type'] == 'download_file':
             # 若是下载文件
-            download_file(file_info['data'])
+            # download_file(file_info['data'])
+            download_file_thread = threading.Thread(target=download_file, args=(file_info['data'],))
+            download_file_thread.start()
 
 
 def download_file(file_data):
@@ -74,10 +79,9 @@ def download_file(file_data):
     download_file_msg = feiQSendMsg.build_msg(feiQCoreData.IPMSG_GETFILEDATA, download_file_option)
     # 发送数据给服务器
     tcp_client_socket.send(download_file_msg.encode('gbk'))
-    file_name = file_data['file_name'].split('/')
     # 接收数据
     try:
-        f = open(file_name[-1], 'wb')
+        f = open(file_data['file_name'], 'wb')
         file_size = file_data['file_size']
         recv_size = 0
         while True:
@@ -92,7 +96,7 @@ def download_file(file_data):
     except Exception as ret:
         print('下载文件错：%s' % ret)
     else:
-        print("%s>>>>下载成功" % file_name[-1])
+        print("%s>>>>下载成功" % file_data['file_name'])
         f.close()
     tcp_client_socket.close()
 
